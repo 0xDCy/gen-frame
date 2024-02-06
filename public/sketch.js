@@ -1,3 +1,4 @@
+// public/sketch.js
 let colors = [[0, 0, 255], [255, 0, 0]]; // Default colorway
 let currentFrame = 0;
 const totalFrames = 120;
@@ -21,8 +22,6 @@ function draw() {
   pulse += pulseSpeed;
   if (pulse > maxPulse) {
     pulse = 0;
-    colors[0] = [random(255), random(255), random(255)];
-    colors[1] = [random(255), random(255), random(255)];
   }
 
   background(0);
@@ -33,7 +32,7 @@ function draw() {
     // Add logic to capture frames here for GIF creation
     if (currentFrame < totalFrames) {
       // Capture frame logic
-      let canvas = document.getElementById('defaultCanvas0');
+      let canvas = document.getElementById('defaultCanvas0'); // Assuming the ID of the canvas created by p5
       let dataUrl = canvas.toDataURL('image/png');
       capturedFrames.push(dataUrl); // Collect each frame's data URL
     } else {
@@ -85,9 +84,12 @@ async function sendFramesToServer(frames) {
       body: JSON.stringify({ frames }),
     });
     if (response.ok) {
-      console.log('Frames sent successfully');
       const data = await response.json();
-      console.log('Generated GIF URL:', data.url); // Log or display the URL of the generated GIF
+      console.log('Generated GIF URL:', data.url); // Log the URL of the generated GIF
+      
+      // Dynamically update the meta tags with the new GIF URL
+      document.getElementById('fc-frame-image').setAttribute("content", data.url);
+      document.getElementById('og-image').setAttribute("content", data.url);
     } else {
       console.error('Failed to send frames');
     }

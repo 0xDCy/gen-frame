@@ -1,11 +1,11 @@
 // public/sketch.js
 let colors = [[0, 0, 255], [255, 0, 0]];
 let currentFrame = 0;
-const totalFrames = 1200;
+const totalFrames = 120;
 const diameter = 300;
 let pulse = 0;
-const maxPulse = 20;
-const pulseSpeed = 0.13;
+const maxPulse = diameter / 2;
+const pulseSpeed = (diameter / 2) / totalFrames; 
 
 // For capturing and sending frames to server
 let captureFrames = false;
@@ -47,19 +47,22 @@ function draw() {
   currentFrame = (currentFrame + 1) % totalFrames;
 }
 
-function drawGradientCircle(diam) {
+function drawGradientCircle() {
   const center = createVector(width / 2, height / 2);
-  let maxRadius = diam / 2;
-  let minRadius = maxRadius - pulse;
+  let maxRadius = diameter / 2;
+  
+  // Dynamically adjust pulse
+  pulse = (pulse + pulseSpeed) % maxRadius;
 
-  minRadius = max(minRadius, 0);
-
-  for (let r = maxRadius; r > minRadius; r--) {
-    const inter = map(r, minRadius, maxRadius, 0, 1);
+  for (let r = maxRadius; r > 0; r--) {
+    let effectiveRadius = r - pulse;
+    effectiveRadius = max(effectiveRadius, 0); // Prevent negative radius
+    const inter = map(effectiveRadius, 0, maxRadius, 0, 1);
     const c = lerpColor(color(...colors[0]), color(...colors[1]), inter);
     noFill();
     stroke(c);
-    ellipse(center.x, center.y, r * 2, r * 2);
+    // Draw the circle with the effective radius
+    ellipse(center.x, center.y, effectiveRadius * 2, effectiveRadius * 2);
   }
 }
 

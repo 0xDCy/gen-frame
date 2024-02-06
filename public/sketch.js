@@ -49,22 +49,31 @@ function draw() {
 
 function drawGradientCircle() {
   const center = createVector(width / 2, height / 2);
-  let maxRadius = diameter / 2;
+  const maxRadius = diameter / 2;
   
-  // Dynamically adjust pulse
-  pulse = (pulse + pulseSpeed) % maxRadius;
-
+  // Update pulse to affect color intensity or alpha instead of size
+  pulse = (pulse + pulseSpeed) % maxPulse;
+  
+  // Calculate a pulsating factor for color or alpha (transparency)
+  // This factor will oscillate between 0 and 1
+  const pulsatingFactor = (sin(2 * PI * pulse / maxPulse) + 1) / 2;
+  
   for (let r = maxRadius; r > 0; r--) {
-    let effectiveRadius = r - pulse;
-    effectiveRadius = max(effectiveRadius, 0); // Prevent negative radius
-    const inter = map(effectiveRadius, 0, maxRadius, 0, 1);
-    const c = lerpColor(color(...colors[0]), color(...colors[1]), inter);
+    const inter = map(r, 0, maxRadius, 0, 1);
+    let fromColor = color(...colors[0]);
+    let toColor = color(...colors[1]);
+    
+    // Apply the pulsating factor to the alpha channel or modify color brightness
+    fromColor.setAlpha(255 * pulsatingFactor);
+    toColor.setAlpha(255 * pulsatingFactor);
+
+    const c = lerpColor(fromColor, toColor, inter);
     noFill();
     stroke(c);
-    // Draw the circle with the effective radius
-    ellipse(center.x, center.y, effectiveRadius * 2, effectiveRadius * 2);
+    ellipse(center.x, center.y, diameter, diameter); // Keep diameter constant
   }
 }
+
 
 
 async function loadColorway() {

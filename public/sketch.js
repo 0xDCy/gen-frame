@@ -28,7 +28,7 @@ function draw() {
   const pulsateDiam = diameter + pulse; // Adjust diameter based on pulse
   drawGradientCircle(pulsateDiam);
   // Overlay mask
-  drawOverlayMask();
+  // drawOverlayMask();
 
   if (captureFrames) {
     // Add logic to capture frames here for GIF creation
@@ -67,16 +67,34 @@ function drawOverlayMask() {
   noErase();
 }
 
-function drawGradientCircle(diam) {
+function drawGradientCircle() {
   const center = createVector(width / 2, height / 2);
-  for (let r = diam / 2; r > 0; r--) {
-    const inter = map(r, 0, diam / 2, 0, 1);
+  const maxRadius = diameter / 2; // Maximum radius remains constant
+
+  let pulseEffect = sin(TWO_PI * currentFrame / totalFrames) * maxPulse;
+  let strokeWeightPulse = map(pulseEffect, -maxPulse, maxPulse, 2, 10); // Example range
+
+  for (let r = maxRadius; r > 0; r--) {
+    const inter = map(r, 0, maxRadius, 0, 1);
     const c = lerpColor(color(...colors[0]), color(...colors[1]), inter);
-    noFill();
     stroke(c);
-    ellipse(center.x, center.y, r * 2, r * 2);
+    strokeWeight(strokeWeightPulse); // Use dynamic stroke weight for pulsation effect
+    noFill();
+    ellipse(center.x, center.y, diameter, diameter); // Keep drawing the circle at the same size
   }
 }
+
+
+// function drawGradientCircle(diam) {
+//   const center = createVector(width / 2, height / 2);
+//   for (let r = diam / 2; r > 0; r--) {
+//     const inter = map(r, 0, diam / 2, 0, 1);
+//     const c = lerpColor(color(...colors[0]), color(...colors[1]), inter);
+//     noFill();
+//     stroke(c);
+//     ellipse(center.x, center.y, r * 2, r * 2);
+//   }
+// }
 
 
 async function loadColorway() {

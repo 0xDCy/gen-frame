@@ -1,11 +1,11 @@
 // public/sketch.js
-let colors = [[0, 0, 255], [255, 0, 0]];
+let colors = [[0, 0, 255], [255, 0, 0]]; // Default colorway
 let currentFrame = 0;
 const totalFrames = 120;
 const diameter = 300;
 let pulse = 0;
-const maxPulse = diameter / 2;
-const pulseSpeed = (diameter / 2) / totalFrames; 
+const maxPulse = 20;
+const pulseSpeed = 0.1;
 
 // For capturing and sending frames to server
 let captureFrames = false;
@@ -50,22 +50,15 @@ function draw() {
 function drawGradientCircle() {
   const center = createVector(width / 2, height / 2);
   const maxRadius = diameter / 2;
-  
-  // Update pulse to affect color intensity or alpha instead of size
-  pulse = (pulse + pulseSpeed) % maxPulse;
-  
-  // Calculate a pulsating factor for color or alpha (transparency)
-  // This factor will oscillate between 0 and 1
-  const pulsatingFactor = (sin(2 * PI * pulse / maxPulse) + 1) / 2;
-  
+
+  // Calculate pulsation factor based on current frame to modulate color intensity or alpha
+  const pulsationFactor = sin(TWO_PI * currentFrame / totalFrames);
+  const alphaValue = map(pulsationFactor, -1, 1, 50, 255); // Adjust alpha between 50 and 255
+
   for (let r = maxRadius; r > 0; r--) {
     const inter = map(r, 0, maxRadius, 0, 1);
-    let fromColor = color(...colors[0]);
-    let toColor = color(...colors[1]);
-    
-    // Apply the pulsating factor to the alpha channel or modify color brightness
-    fromColor.setAlpha(255 * pulsatingFactor);
-    toColor.setAlpha(255 * pulsatingFactor);
+    let fromColor = color(...colors[0], alphaValue); // Apply alpha to start color
+    let toColor = color(...colors[1], alphaValue); // Apply alpha to end color
 
     const c = lerpColor(fromColor, toColor, inter);
     noFill();
@@ -73,7 +66,6 @@ function drawGradientCircle() {
     ellipse(center.x, center.y, diameter, diameter); // Keep diameter constant
   }
 }
-
 
 
 async function loadColorway() {

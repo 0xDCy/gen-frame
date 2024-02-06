@@ -27,6 +27,8 @@ function draw() {
   background(0);
   const pulsateDiam = diameter + pulse; // Adjust diameter based on pulse
   drawGradientCircle(pulsateDiam);
+  // Overlay mask
+  drawOverlayMask();
 
   if (captureFrames) {
     // Add logic to capture frames here for GIF creation
@@ -45,6 +47,24 @@ function draw() {
   }
 
   currentFrame = (currentFrame + 1) % totalFrames;
+}
+
+function drawOverlayMask() {
+  // Calculate the overlay dimensions and position
+  const overlaySize = width; // Assuming a square canvas
+  const holeDiameter = diameter; // The diameter of the hole, matching the intended visible circle size
+  
+  // Draw the overlay with a hole
+  fill(0); // Match the background color
+  rect(0, 0, overlaySize, overlaySize); // Draw the overlay covering the whole canvas
+  
+  // Remove fill for the hole
+  fill(0, 0, 0, 0); // Fully transparent
+  
+  // Create the hole by drawing a circle in 'erase' mode
+  erase();
+  ellipse(width / 2, height / 2, holeDiameter, holeDiameter);
+  noErase();
 }
 
 function drawGradientCircle(diam) {

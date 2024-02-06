@@ -1,5 +1,5 @@
 // public/sketch.js
-let colors;
+let colors = [[0, 0, 255], [255, 0, 0]];
 let currentFrame = 0;
 const totalFrames = 120;
 const diameter = 300;

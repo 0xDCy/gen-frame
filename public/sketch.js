@@ -47,27 +47,16 @@ function draw() {
   currentFrame = (currentFrame + 1) % totalFrames;
 }
 
-function drawGradientCircle() {
+function drawGradientCircle(diam) {
   const center = createVector(width / 2, height / 2);
-  // Calculate pulsation factor based on the current frame to modulate brightness or alpha
-  const pulsationFactor = sin(TWO_PI * currentFrame / totalFrames);
-  // Adjust alpha or brightness based on pulsationFactor
-  const alphaValue = map(pulsationFactor, -1, 1, 128, 255); // Example: Vary alpha between 128 and 255
-
-  // Calculate color at the circle's center and edge for gradient effect
-  let innerColor = color(...colors[0], alphaValue);
-  let outerColor = color(...colors[1], alphaValue);
-
-  // Draw the full orb with gradient effect
-  for (let r = diameter / 2; r > 0; r--) {
-    const inter = map(r, 0, diameter / 2, 0, 1);
-    const c = lerpColor(innerColor, outerColor, inter);
-    fill(c); // Use fill instead of stroke to create a solid orb
-    noStroke(); // Remove the stroke to ensure the orb appears filled
+  for (let r = diam / 2; r > 0; r--) {
+    const inter = map(r, 0, diam / 2, 0, 1);
+    const c = lerpColor(color(...colors[0]), color(...colors[1]), inter);
+    noFill();
+    stroke(c);
     ellipse(center.x, center.y, r * 2, r * 2);
   }
 }
-
 
 
 async function loadColorway() {

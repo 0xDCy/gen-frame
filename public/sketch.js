@@ -1,11 +1,11 @@
 // public/sketch.js
 let colors = [[0, 0, 255], [255, 0, 0]];
 let currentFrame = 0;
-const totalFrames = 120;
+const totalFrames = 1200;
 const diameter = 300;
 let pulse = 0;
 const maxPulse = 20;
-const pulseSpeed = 0.1;
+const pulseSpeed = 0.13;
 
 // For capturing and sending frames to server
 let captureFrames = false;

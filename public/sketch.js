@@ -49,14 +49,20 @@ function draw() {
 
 function drawGradientCircle(diam) {
   const center = createVector(width / 2, height / 2);
-  for (let r = diam / 2; r > 0; r--) {
-    const inter = map(r, 0, diam / 2, 0, 1);
+  let maxRadius = diam / 2;
+  let minRadius = maxRadius - pulse;
+
+  minRadius = max(minRadius, 0);
+
+  for (let r = maxRadius; r > minRadius; r--) {
+    const inter = map(r, minRadius, maxRadius, 0, 1);
     const c = lerpColor(color(...colors[0]), color(...colors[1]), inter);
     noFill();
     stroke(c);
     ellipse(center.x, center.y, r * 2, r * 2);
   }
 }
+
 
 async function loadColorway() {
   // Fetch new colorway from server

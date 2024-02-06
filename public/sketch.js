@@ -60,7 +60,7 @@ function drawGradientCircle(diam) {
 
 async function loadColorway() {
   // Fetch new colorway from server
-  const response = await fetch('/api/colorway');
+  const response = await fetch('/api/generateColor');
   const data = await response.json();
   colors = data.colors;
 }
